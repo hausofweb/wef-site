@@ -38,10 +38,15 @@ const history: NextPage<Props> = ({ article, contactInfo }) => (
 
 export default history;
 
-export const getStaticProps: GetStaticProps<Props> = async () => ({
-  props: {
-    article: await getArticle("history"),
-    contactInfo: await getContactInfo(),
-  },
-  revalidate: 300,
-});
+export const getStaticProps: GetStaticProps<Props> = async () => {
+  const article = await getArticle("history");
+
+  if (!article) {
+    return { notFound: true, revalidate: 300 };
+  }
+
+  return {
+    props: { article, contactInfo: await getContactInfo() },
+    revalidate: 300,
+  };
+};

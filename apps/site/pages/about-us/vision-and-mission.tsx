@@ -39,10 +39,15 @@ const visionAndMission: NextPage<Props> = ({ article, contactInfo }) => (
 
 export default visionAndMission;
 
-export const getStaticProps: GetStaticProps<Props> = async () => ({
-  props: {
-    article: await getArticle("visionAndMission"),
-    contactInfo: await getContactInfo(),
-  },
-  revalidate: 300,
-});
+export const getStaticProps: GetStaticProps<Props> = async () => {
+  const article = await getArticle("visionAndMission");
+
+  if (!article) {
+    return { notFound: true, revalidate: 300 };
+  }
+
+  return {
+    props: { article, contactInfo: await getContactInfo() },
+    revalidate: 300,
+  };
+};

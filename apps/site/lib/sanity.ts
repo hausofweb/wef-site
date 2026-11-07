@@ -52,11 +52,21 @@ const SCREENINGS_QUERY = defineQuery(
   }`
 );
 
-export const getContactInfo = () =>
-  client.fetch<ContactInfo>(CONTACT_INFO_QUERY);
+// Components fall back to placeholder text for empty fields, so a missing
+// document renders the site shell instead of failing the build.
+const EMPTY_CONTACT_INFO: ContactInfo = {
+  email: "",
+  fullAddress: "",
+  phoneNumber: "",
+  taglineText: "",
+};
+
+export const getContactInfo = async () =>
+  (await client.fetch<ContactInfo | null>(CONTACT_INFO_QUERY)) ??
+  EMPTY_CONTACT_INFO;
 
 export const getArticle = (section: Article["section"]) =>
-  client.fetch<Article>(ARTICLE_QUERY, { section });
+  client.fetch<Article | null>(ARTICLE_QUERY, { section });
 
 export const getGallery = async () =>
   (await client.fetch<Image[] | null>(GALLERY_QUERY)) ?? [];
