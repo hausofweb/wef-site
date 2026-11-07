@@ -4,7 +4,7 @@
   "private": true,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kduprey/wef-site.git"
+    "url": "git+https://github.com/hausofweb/wef-site.git"
   },
   "type": "module",
   "scripts": {

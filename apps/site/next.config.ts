@@ -14,7 +14,7 @@ const release: SentryBuildOptions["release"] = {
 if (process.env.SENTRY_COMMIT_SHA) {
   release.setCommits = {
     commit: process.env.SENTRY_COMMIT_SHA,
-    repo: "kduprey/wef-site",
+    repo: "hausofweb/wef-site",
   };
 }
 
