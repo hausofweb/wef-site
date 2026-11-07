@@ -1,0 +1,64 @@
+$input-group-addon-color: #0d6efd;
+$input-group-addon-bg: #fff;
+$input-group-addon-border-color: #0d6efd;
+
+@import url("https://use.typekit.net/tna1apk.css");
+@import "bootstrap-icons/font/bootstrap-icons.css";
+
+$font-family-sans-serif:
+  "Muli", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+  "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji",
+  "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+$font-weight-light: 200;
+$font-weight-lighter: 300;
+$font-weight-normal: 400;
+$font-weight-bolder: 600;
+$font-weight-bold: 700;
+
+$font-size-root: 16px;
+
+$primary: #09cc7f;
+$secondary: #072366;
+$dark: #010a1f;
+
+$navbar-light-hover-color: $primary;
+$navbar-light-color: $secondary;
+
+@import "../node_modules/bootstrap/scss/bootstrap.scss";
+
+.nav-link {
+  display: block;
+  padding: 0.5rem 1rem;
+  color: $secondary;
+  text-decoration: none;
+  -webkit-transition:
+    color 0.15s ease-in-out,
+    background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out;
+  transition:
+    color 0.15s ease-in-out,
+    background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out;
+}
+
+.footer-link {
+  text-decoration: none;
+  -webkit-transition:
+    color 0.15s ease-in-out,
+    background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out;
+  transition:
+    color 0.15s ease-in-out,
+    background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out;
+}
+
+.footer-link:hover {
+  color: $primary;
+  text-decoration: underline;
+}
+
+.active {
+  color: $primary;
+}

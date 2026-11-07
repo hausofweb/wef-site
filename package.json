@@ -1,33 +1,94 @@
 {
   "name": "wef-site",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kduprey/wef-site.git"
   },
-  "dependencies": {
-    "@graphcms/rich-text-react-renderer": "^0.6.2",
-    "@graphcms/rich-text-types": "^0.5.1",
-    "@mailchimp/mailchimp_marketing": "^3.0.78",
-    "axios": "^1.18.0",
-    "bootstrap": "^5.3.6",
-    "bootstrap-icons": "^1.12.1",
-    "graphql": "^16.11.0",
-    "graphql-request": "^7.1.2",
-    "md5": "^2.3.0",
-    "next": "^15.5.27",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
-    "react-paystack": "^5.0.0",
-    "sass": "^1.86.3"
+  "type": "module",
+  "scripts": {
+    "build": "turbo run build",
+    "check": "ultracite check",
+    "commit": "cz",
+    "dev": "turbo run dev",
+    "fix": "ultracite fix",
+    "gc": "cz",
+    "lint": "ultracite check",
+    "prepare": "husky",
+    "start": "turbo run start",
+    "type-check": "turbo run type-check"
   },
   "devDependencies": {
-    "@types/node": "^22.15.17",
-    "@types/react": "^18.3.13",
-    "eslint": "^9.26.0",
-    "eslint-config-next": "^15.3.1"
-  }
+    "@commitlint/cli": "^21.2.4",
+    "@commitlint/config-conventional": "^21.2.4",
+    "cz-conventional-changelog": "^3.3.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0",
+    "oxfmt": "^0.75.0",
+    "oxlint": "^1.90.0",
+    "release-please": "^17.11.2",
+    "turbo": "^2.11.10",
+    "typescript": "^7.0.2",
+    "ultracite": "^8.1.0"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,jsonc,css,scss}": [
+      "ultracite fix"
+    ]
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ],
+    "rules": {
+      "body-max-line-length": [
+        0
+      ],
+      "footer-max-line-length": [
+        0
+      ],
+      "header-max-length": [
+        2,
+        "always",
+        120
+      ],
+      "subject-case": [
+        0
+      ],
+      "type-enum": [
+        2,
+        "always",
+        [
+          "build",
+          "chore",
+          "ci",
+          "docs",
+          "feat",
+          "fix",
+          "perf",
+          "refactor",
+          "release",
+          "revert",
+          "style",
+          "test"
+        ]
+      ]
+    }
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog",
+      "scopes": [
+        "site",
+        "cms",
+        "turbo",
+        "ci"
+      ]
+    }
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "packageManager": "pnpm@12.15.0"
 }
