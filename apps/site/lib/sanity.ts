@@ -4,7 +4,8 @@ import type { Article, ContactInfo, Image, Profile, Screening } from "../types";
 
 const client = createClient({
   apiVersion: "2026-01-01",
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
+  // Every non-production environment (previews, local dev) reads staging.
+  dataset: process.env.VERCEL_ENV === "production" ? "production" : "staging",
   perspective: "published",
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
   useCdn: false,
