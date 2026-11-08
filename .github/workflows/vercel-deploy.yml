@@ -93,13 +93,15 @@ jobs:
           # setCommits: auto needs a local .git dir, which a remote `vercel
           # deploy` build never has - pass the SHA explicitly instead.
           args+=(--build-env "SENTRY_COMMIT_SHA=$SENTRY_COMMIT_SHA")
-          # `vercel deploy` prints the deployment URL as the last line of
-          # stdout - tee to stderr so it's still visible in the job log.
+          # `vercel deploy` prints the deployment URL followed by a
+          # "next steps" help block on stdout, so pick out the first
+          # *.vercel.app URL rather than trusting the last line. tee to
+          # stderr keeps the full output visible in the job log.
           # `set -e` does NOT fail the script when a command substitution
           # on the right side of an assignment (url=$(...)) fails - the
           # exit code has to be checked explicitly, or a failed Vercel
           # build silently reports this step as passing.
-          if ! url=$(npx vercel@59.18.0 "${args[@]}" | tee /dev/stderr); then
+          if ! url=$(npx vercel@59.18.0 "${args[@]}" | tee /dev/stderr | grep -m1 -Eo 'https://[^[:space:]]+\.vercel\.app'); then
             exit 1
           fi
           echo "url=$url" >> "$GITHUB_OUTPUT"
