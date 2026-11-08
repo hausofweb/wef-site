@@ -1,0 +1,15 @@
+.headerText {
+  text-align: center;
+}
+
+@media (min-width: 992px) {
+  .heroImg {
+    position: absolute;
+    top: 50%;
+    left: 35%;
+    transform: translate(-50%, -50%);
+  }
+  .headerText {
+    text-align: left;
+  }
+}

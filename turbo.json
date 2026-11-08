@@ -1,0 +1,37 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": ["**/.env.*local"],
+  "globalEnv": [
+    "AIRTABLE_API_KEY",
+    "MAILCHIMP_API_KEY",
+    "MAILCHIMP_AUDIENCE_ID",
+    "VERCEL_ENV",
+    "VERCEL_*",
+    "NEXT_*",
+    "NODE_*",
+    "SANITY_*",
+    "SENTRY_*"
+  ],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**"]
+    },
+    "type-check": {
+      "dependsOn": ["^build"]
+    },
+    "start": {
+      "dependsOn": ["build"],
+      "cache": false,
+      "inputs": ["$TURBO_DEFAULT$", ".env", ".env.local"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true,
+      "inputs": ["$TURBO_DEFAULT$", ".env", ".env.local"]
+    },
+    "//#lint": {
+      "cache": false
+    }
+  }
+}
