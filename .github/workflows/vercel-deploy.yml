@@ -115,4 +115,6 @@ jobs:
           # set it well above the slowest build seen so far so this waits
           # for Ready/Error instead of timing out on a still-building
           # deployment.
-          npx vercel@59.18.0 inspect "$url" --token="$VERCEL_TOKEN" --wait --timeout=15m
+          # --scope: a team-scoped token can't resolve the personal account
+          # `inspect` defaults to, which fails with "User not found".
+          npx vercel@59.18.0 inspect "$url" --token="$VERCEL_TOKEN" --scope="$VERCEL_ORG_ID" --wait --timeout=15m
