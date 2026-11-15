@@ -81,13 +81,16 @@ const uploadImage = async ({ url }: HygraphImage) => {
   return { _type: "image", asset: { _ref: asset._id, _type: "reference" } };
 };
 
-const uploadImages = (images: HygraphImage[]) =>
-  Promise.all(
-    images.map(async (image) => ({
-      _key: key(),
-      ...(await uploadImage(image)),
-    }))
-  );
+// Hygraph sometimes listed the same photo twice under different URLs; Sanity
+// stores both as one asset, so keep only its first appearance.
+const uploadImages = async (images: HygraphImage[]) => {
+  const uploaded = await Promise.all(images.map(uploadImage));
+  const seen = new Set<string>();
+
+  return uploaded
+    .filter(({ asset }) => !seen.has(asset._ref) && seen.add(asset._ref))
+    .map((image) => ({ _key: key(), ...image }));
+};
 
 const toPortableText = (nodes: HygraphNode[]) =>
   nodes.map((node) => {

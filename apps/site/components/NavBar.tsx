@@ -90,7 +90,7 @@ const NavBar: React.FunctionComponent<Props> = ({ active, contactInfo }) => {
 
           <a
             className="text-decoration-none text-black"
-            href="mailto:test@test.com?subject=Touching Base with World Eye Foundation"
+            href={`mailto:${contactInfo.email}?subject=Touching Base with World Eye Foundation`}
           >
             {contactInfo.email || "test@email.com"}
           </a>

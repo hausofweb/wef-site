@@ -4,14 +4,19 @@ import type { WorkspaceOptions } from "sanity";
 import { structureTool } from "sanity/structure";
 
 import { schemaTypes } from "./schemas";
-import { documentActions, structure, templates } from "./structure";
+import {
+  documentActions,
+  newDocumentOptions,
+  structure,
+  templates,
+} from "./structure";
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ?? "";
 
 const workspace = (dataset: "production" | "staging"): WorkspaceOptions => ({
   basePath: `/${dataset}`,
   dataset,
-  document: { actions: documentActions },
+  document: { actions: documentActions, newDocumentOptions },
   name: dataset,
   plugins: [structureTool({ structure }), visionTool()],
   projectId,

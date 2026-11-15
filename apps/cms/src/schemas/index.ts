@@ -4,6 +4,4 @@ import { gallery } from "./gallery";
 import { profile } from "./profile";
 import { screening } from "./screening";
 
-export const singletonTypes = [contactInfo, gallery];
-
-export const schemaTypes = [...singletonTypes, article, profile, screening];
+export const schemaTypes = [contactInfo, article, profile, screening, gallery];
