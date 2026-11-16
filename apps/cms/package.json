@@ -1,0 +1,29 @@
+{
+  "name": "cms",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev -p 3333",
+    "publishContent": "sanity dataset export staging . --overwrite && sanity dataset import staging.tar.gz production --replace",
+    "pullContent": "sanity dataset export production . --overwrite && sanity dataset import production.tar.gz staging --replace",
+    "start": "next start",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@sanity/icons": "^5.2.3",
+    "@sanity/vision": "^6.21.0",
+    "next": "^16.4.3",
+    "next-sanity": "^13.4.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "sanity": "^6.21.0",
+    "styled-components": "^6.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "typescript": "^7.0.2"
+  }
+}

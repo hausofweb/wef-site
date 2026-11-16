@@ -1,0 +1,109 @@
+name: Release
+on:
+  push:
+    branches:
+      - production
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    name: Publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # to create the tag and GitHub release
+    outputs:
+      published_production: ${{ steps.tag.outputs.published_production }}
+      tag: ${{ steps.tag.outputs.tag }}
+    steps:
+      - name: Generate a token
+        id: id-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ vars.TOKEN_APP_ID }}
+          private-key: ${{ secrets.TOKEN_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: read
+
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          token: ${{ steps.id-token.outputs.token }}
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24.x
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm i --frozen-lockfile
+
+      - name: Audit dependencies for known vulnerabilities
+        run: pnpm audit || true
+
+      # The promotion PR lands as a merge commit (not squash), so every
+      # individual conventional commit from main is preserved in production's
+      # history — release-please walks them directly to compute the bump.
+      - name: Compute release version
+        id: release
+        env:
+          GITHUB_TOKEN: ${{ steps.id-token.outputs.token }}
+        run: node scripts/compute-release.mjs
+
+      # workflow_dispatch re-targets the tag already published at HEAD, so a
+      # failed production deploy can be retried without a new release.
+      - name: Tag and publish GitHub release
+        id: tag
+        if: steps.release.outputs.released == 'true' || (github.event_name == 'workflow_dispatch' && github.ref_name == 'production')
+        env:
+          GH_TOKEN: ${{ steps.id-token.outputs.token }}
+          NOTES_FILE: ${{ steps.release.outputs.notes_file }}
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
+        run: |
+          TAG="$RELEASE_TAG"
+          if [ -z "$TAG" ]; then
+            TAG=$(git describe --tags --abbrev=0)
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+          if ! gh release view "$TAG" >/dev/null 2>&1; then
+            gh release create "$TAG" --title "$TAG" --notes-file "$NOTES_FILE" --target "$GITHUB_SHA"
+          fi
+
+          IS_DRAFT=$(gh release view "$TAG" --json isDraft --jq .isDraft)
+          IS_PRERELEASE=$(gh release view "$TAG" --json isPrerelease --jq .isPrerelease)
+          if [ "$IS_DRAFT" = "false" ] && [ "$IS_PRERELEASE" = "false" ]; then
+            echo "published_production=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  deploy-site:
+    name: Deploy site
+    needs: release
+    if: needs.release.outputs.published_production == 'true'
+    uses: ./.github/workflows/vercel-deploy.yml
+    secrets:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+    with:
+      vercel-project-id: ${{ vars.VERCEL_PROJECT_ID_SITE }}
+      prod: true
+      sentry-release: ${{ needs.release.outputs.tag }}
+
+  deploy-cms:
+    name: Deploy cms
+    needs: release
+    if: needs.release.outputs.published_production == 'true'
+    uses: ./.github/workflows/vercel-deploy.yml
+    secrets:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+    with:
+      vercel-project-id: ${{ vars.VERCEL_PROJECT_ID_CMS }}
+      prod: true
