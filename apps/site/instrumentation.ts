@@ -1,0 +1,7 @@
+export { captureRequestError as onRequestError } from "@sentry/nextjs";
+
+export const register = async () => {
+  if (process.env.NEXT_RUNTIME === "nodejs") {
+    await import("./sentry.server.config");
+  }
+};
