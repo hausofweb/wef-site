@@ -1,12 +1,12 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"],
+  "extends": ["config:recommended", "group:allNonMajor"],
   "baseBranchPatterns": ["main"],
   "schedule": ["every weekday"],
   "minimumReleaseAge": "7 days",
   "prConcurrentLimit": 5,
   "prHourlyLimit": 2,
-  "rebaseWhen": "conflicted",
+  "rebaseWhen": "behind-base-branch",
   "postUpdateOptions": ["pnpmDedupe"],
   "labels": ["dependencies"],
   "semanticCommits": "enabled",
@@ -22,6 +22,11 @@
       "automerge": true,
       "automergeType": "pr",
       "platformAutomerge": true
+    },
+    {
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchCurrentVersion": "/^v?0\\./",
+      "groupName": null
     },
     {
       "matchUpdateTypes": ["major"],
